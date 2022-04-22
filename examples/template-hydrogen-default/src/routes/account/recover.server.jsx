@@ -32,10 +32,8 @@ export async function api(request, {queryShop}) {
   });
 
   if (
-    data &&
-    data.customerRecover &&
-    data.customerRecover.customerUserErrors &&
-    data.customerRecover.customerUserErrors.lenghth === 0
+    data?.customerRecover === null ||
+    data?.customerRecover?.customerUserErrors?.lenghth === 0
   ) {
     return new Response(null, {
       status: 200,
@@ -43,7 +41,7 @@ export async function api(request, {queryShop}) {
   } else {
     return new Response(
       JSON.stringify({
-        error: data ? data.customerCreate.customerUserErrors : error,
+        error: data?.customerRecover?.customerUserErrors || error,
       }),
       {status: 401},
     );

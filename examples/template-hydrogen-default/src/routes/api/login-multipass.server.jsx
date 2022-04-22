@@ -3,7 +3,7 @@ import {NoStore, setCustomerAccessToken} from '@shopify/hydrogen';
 import gql from 'graphql-tag';
 import shopifyConfig from '../../../shopify.config';
 
-export async function api(request, {queryShop}) {
+export async function api(request, {session, queryShop}) {
   const searchParams = new URL(request.url).searchParams;
 
   const returnURL = searchParams.get('returnurl');
@@ -29,13 +29,13 @@ export async function api(request, {queryShop}) {
     data.customerAccessTokenCreateWithMultipass &&
     data.customerAccessTokenCreateWithMultipass.customerAccessToken !== null
   ) {
-    const customerHeaders = setCustomerAccessToken(
+    await setCustomerAccessToken(
+      session,
       data.customerAccessTokenCreateWithMultipass.customerAccessToken,
     );
 
     return new Response(null, {
       headers: {
-        ...customerHeaders,
         Location: returnURL,
       },
       status: 301,

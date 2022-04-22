@@ -13,7 +13,7 @@ export default function Login() {
   );
 }
 
-export async function api(request, {queryShop}) {
+export async function api(request, {session, queryShop}) {
   const jsonBody = await request.json();
 
   if (
@@ -44,12 +44,12 @@ export async function api(request, {queryShop}) {
     data.customerAccessTokenCreate &&
     data.customerAccessTokenCreate.customerAccessToken !== null
   ) {
-    const customerHeaders = setCustomerAccessToken(
+    await setCustomerAccessToken(
+      session,
       data.customerAccessTokenCreate.customerAccessToken,
     );
 
     return new Response(null, {
-      headers: customerHeaders,
       status: 200,
     });
   } else {
